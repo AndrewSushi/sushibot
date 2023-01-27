@@ -1,0 +1,27 @@
+#board{
+    width: 800px;
+    height: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.square{
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+.black{
+    background-color: darkgreen;
+}
+
+.white{
+    background-color: antiquewhite;
+}
+
+img{
+    width: 100px;
+    height: 100px;
+    margin: auto;
+}
