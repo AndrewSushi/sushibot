@@ -56,8 +56,6 @@ function handleClick(piece){
         movePiece(selectedSquare[0], selectedSquare[1], x, y)
         selectedSquare[2].style.backgroundColor = ''
         selectedSquare = null
-        // console.log(piece)
-        // Check to see if it is a valid move, if so, move
     }
 }
 
@@ -67,56 +65,6 @@ function printBoard(){
         console.log(board[i]);
     }
 }
-
-// Piece Moving
-function movePiece(fromX, fromY, toX, toY){
-    if(isValidMove(fromX, fromY, toX, toY)){
-        board[toX][toY] = board[fromX][fromY];
-        board[fromX][fromY] = ''
-        renderBoard()
-    }
-}
-
-function isPathClear(fromX, fromY, toX, toY){
-
-}
-
-// Validation checking
-function isValidMove(fromX, fromY, toX, toY){
-    let piece = board[fromX][fromY];
-    if(fromX == toX & toX == toY){
-        return false
-    }
-    if(piece == board[toX][toY]){
-        return false
-    }
-    if(piece[0] === board[toX][toY][0]){
-        return false
-    }
-    switch(piece[1]){
-        case 'P':
-            if(piece[0] == 'w'){
-                if(fromX - toX < 0){
-                    return false
-                }
-            }else if(piece[0] == 'b'){
-                if(toX - fromX < 0){
-                    return false
-                }
-            }
-            let normalPush = (Math.abs(toX - fromX) === 1 && toY === fromY && board[toX][toY] === '');
-            let capture = (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1 && board[toX][toY] !== '');
-            let twoPush = (Math.abs(toX - fromX) === 2 && ((fromX === 6) || (fromX === 1)) && toY === fromY && board[toX][toY] === '');
-            let enPassant;
-            // TODO: Enpassant
-            return normalPush || capture || twoPush;
-    }
-    // console.log(piece[1])
-    return true
-}
-
-
-
 
 renderBoard()
 addEventListeners()
