@@ -21,12 +21,43 @@ function renderBoard(){
                 img.src = `imgs/${boardHTML.rows[i].cells[j].id}.png`;
                 boardHTML.rows[i].cells[j].appendChild(img);
             }
+        }
+    }
+}
+
+
+function addEventListeners(){
+    for(let i = 0; i < 8; i++){
+        for(let j = 0; j < 8; j++){
             boardHTML.rows[i].cells[j].addEventListener("click", function(event){
                 let target1 = event.target
-                // TODO: Recurse backwards to find parent node
-                console.log(event.target)
+                while(!(target1.classList.contains("square"))){
+                    target1 = target1.parentElement
+                }
+                // console.log(target1)
+                handleClick(target1)
             })
         }
+    }
+}
+
+let selectedSquare = null;
+        
+function handleClick(piece){
+    let x = piece.parentNode.rowIndex
+    let y = piece.cellIndex
+    if(board[x][y] !== '' && selectedSquare == null){
+        selectedSquare = [x, y, piece];
+        piece.style.backgroundColor = "green"
+    }else if(selectedSquare && selectedSquare[0] === x && selectedSquare[1] === y){
+        selectedSquare = null;
+        piece.style.backgroundColor = ''
+    }else if(selectedSquare){
+        movePiece(selectedSquare[0], selectedSquare[1], x, y)
+        selectedSquare[2].style.backgroundColor = ''
+        selectedSquare = null
+        // console.log(piece)
+        // Check to see if it is a valid move, if so, move
     }
 }
 
@@ -46,6 +77,10 @@ function movePiece(fromX, fromY, toX, toY){
     }
 }
 
+function isPathClear(fromX, fromY, toX, toY){
+
+}
+
 // Validation checking
 function isValidMove(fromX, fromY, toX, toY){
     let piece = board[fromX][fromY];
@@ -58,9 +93,17 @@ function isValidMove(fromX, fromY, toX, toY){
     if(piece[0] === board[toX][toY][0]){
         return false
     }
-
     switch(piece[1]){
         case 'P':
+            if(piece[0] == 'w'){
+                if(fromX - toX < 0){
+                    return false
+                }
+            }else if(piece[0] == 'b'){
+                if(toX - fromX < 0){
+                    return false
+                }
+            }
             let normalPush = (Math.abs(toX - fromX) === 1 && toY === fromY && board[toX][toY] === '');
             let capture = (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1 && board[toX][toY] !== '');
             let twoPush = (Math.abs(toX - fromX) === 2 && ((fromX === 6) || (fromX === 1)) && toY === fromY && board[toX][toY] === '');
@@ -76,6 +119,7 @@ function isValidMove(fromX, fromY, toX, toY){
 
 
 renderBoard()
+addEventListeners()
 // movePiece(6, 4, 4, 4)
 // movePiece(4, 4, 3, 4)
 // // movePiece(4, 0, 3, 0)

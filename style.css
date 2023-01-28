@@ -1,8 +1,9 @@
 #board{
-    width: 800px;
-    height: 800px;
+    width: 900px;
+    height: 900px;
     margin: 0 auto;
     border-collapse: collapse;
+    border: 10px solid black;
 }
 
 .square{
@@ -13,15 +14,15 @@
 }
 
 .black{
-    background-color: darkgreen;
+    background-color: rgb(61, 123, 90);
 }
 
 .white{
-    background-color: antiquewhite;
+    background-color: rgb(227, 209, 177);
 }
 
 img{
-    width: 90px;
-    height: 90px;
+    max-width: 90px;
+    max-height: 90px;
     margin: auto;
 }
