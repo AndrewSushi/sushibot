@@ -12,7 +12,8 @@ function isPathClear(fromX, fromY, toX, toY){
 }
 
 function rook(fromX, fromY, toX, toY, piece){
-    return true
+    move1 = (fromX == toX || fromY == toY)
+    return move1
 }
 
 function knight(fromX, fromY, toX, toY){
@@ -21,19 +22,22 @@ function knight(fromX, fromY, toX, toY){
     return move1 || move2
 }
 
-function bishop(fromX, fromY, toX, toY, piece){
-    return true
-    
+function bishop(fromX, fromY, toX, toY){
+    move1 = (Math.abs(fromX - toX) == Math.abs(fromY - toY))
+    return move1
 }
 
 function queen(fromX, fromY, toX, toY, piece){
-    return true
-    
+    move1 = (fromX == toX || fromY == toY)
+    move2 = (Math.abs(fromX - toX) == Math.abs(fromY - toY))
+    return move1 || move2
 }
 
 function king(fromX, fromY, toX, toY, piece){
-    return true
-
+    move1 = (fromX == toX || fromY == toY)
+    move2 = (Math.abs(fromX - toX) == Math.abs(fromY - toY))
+    // TODO Make sure king only moevs one place
+    return move1 || move2
 }
 
 function pawn(fromX, fromY, toX, toY, piece){
