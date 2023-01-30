@@ -21,6 +21,11 @@ function renderBoard(){
                 img.src = `imgs/${boardHTML.rows[i].cells[j].id}.png`;
                 boardHTML.rows[i].cells[j].appendChild(img);
             }
+            if((i == 0) && (board[i][j] == 'wP')){
+                board[i][j] = 'wQ'
+            }else if((i == 7) && (board[i][j] == 'bP')){
+                board[i][j] = 'bQ'
+            }
         }
     }
 }

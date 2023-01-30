@@ -1,9 +1,15 @@
+let enPassant = false
+let enPassantSquare = null
+let whiteTurn = true
+
 // Piece Moving
 function movePiece(fromX, fromY, toX, toY){
     if(isValidMove(fromX, fromY, toX, toY)){
         board[toX][toY] = board[fromX][fromY];
         board[fromX][fromY] = ''
         renderBoard()
+        renderBoard()
+        whiteTurn = !whiteTurn
     }
 }
 
@@ -27,17 +33,17 @@ function bishop(fromX, fromY, toX, toY){
     return move1
 }
 
-function queen(fromX, fromY, toX, toY, piece){
+function queen(fromX, fromY, toX, toY){
     move1 = (fromX == toX || fromY == toY)
     move2 = (Math.abs(fromX - toX) == Math.abs(fromY - toY))
     return move1 || move2
 }
 
-function king(fromX, fromY, toX, toY, piece){
+function king(fromX, fromY, toX, toY){
     move1 = (fromX == toX || fromY == toY)
     move2 = (Math.abs(fromX - toX) == Math.abs(fromY - toY))
-    // TODO Make sure king only moevs one place
-    return move1 || move2
+    oneSquare = ((Math.abs(fromX - toX) == 1) || (Math.abs(fromX - toX) == 0)) && ((Math.abs(fromY - toY) == 1) || (Math.abs(fromY - toY) == 0))
+    return (move1 || move2) && oneSquare
 }
 
 function pawn(fromX, fromY, toX, toY, piece){
@@ -45,7 +51,7 @@ function pawn(fromX, fromY, toX, toY, piece){
         if(fromX - toX < 0){
             return false
         }
-    }else if(piece[0] == 'b'){
+    }else{
         if(toX - fromX < 0){
             return false
         }
@@ -53,7 +59,22 @@ function pawn(fromX, fromY, toX, toY, piece){
     let normalPush = (Math.abs(toX - fromX) === 1 && toY === fromY && board[toX][toY] === '');
     let capture = (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1 && board[toX][toY] !== '');
     let twoPush = (Math.abs(toX - fromX) === 2 && ((fromX === 6) || (fromX === 1)) && toY === fromY && board[toX][toY] === '');
-    let enPassant;
+    if(enPassant && (toX == enPassantSquare[0]) && (toY == enPassantSquare[1])){
+        if(piece[0] == 'w'){
+            board[toX + 1][toY] = ''
+        }else{
+            board[toX - 1][toY] = ''
+        }
+        return true
+    }
+    if(twoPush){
+        enPassant = true
+        enPassantSquare = [(fromX + toX) / 2, fromY]
+    }else{
+        enPassant = false
+        enPassantSquare = null
+    }
+
     // TODO: Enpassant
     return normalPush || capture || twoPush;
 }
@@ -61,6 +82,11 @@ function pawn(fromX, fromY, toX, toY, piece){
 // Validation checking
 function isValidMove(fromX, fromY, toX, toY){
     let piece = board[fromX][fromY];
+    if((piece[0] == 'b') && (whiteTurn)){
+        return false
+    }else if((piece[0] == 'w') && (!whiteTurn)){
+        return false
+    }
     if(fromX == toX & fromY == toY){
         console.log("Error1")
         return false
@@ -75,14 +101,19 @@ function isValidMove(fromX, fromY, toX, toY){
     }
     switch(piece[1]){
         case 'R':
+            enPassant = false
             return rook(fromX, fromY, toX, toY, piece)
         case 'N':
+            enPassant = false
             return knight(fromX, fromY, toX, toY, piece)
         case 'B':
+            enPassant = false
             return bishop(fromX, fromY, toX, toY, piece)
         case 'Q':
+            enPassant = false
             return queen(fromX, fromY, toX, toY, piece)
         case 'K':
+            enPassant = false
             return king(fromX, fromY, toX, toY, piece)
         case 'P':
             return pawn(fromX, fromY, toX, toY, piece)
