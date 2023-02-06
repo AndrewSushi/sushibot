@@ -48,7 +48,18 @@ function isPathClear(fromX, fromY, toX, toY){
 
 function rook(fromX, fromY, toX, toY, piece){
     move1 = (fromX == toX || fromY == toY)
-    return move1 & isPathClear(fromX, fromY, toX, toY)
+    if(move1 & isPathClear(fromX, fromY, toX, toY)){
+        // if(piece[0] == 'w' & fromY == 0){
+        //     castling = castling & 0b0111
+        // }else if(piece[0] == 'w' & fromY == 7){
+        //     castling = castling & 0b1011
+        // }else if(piece[0] == 'b' & fromY == 0){
+        //     castling = castling & 0b1101
+        // }else{
+        //     castling = castling & 0b1110
+        // }
+        return true
+    }
 }
 
 function knight(fromX, fromY, toX, toY){
@@ -71,7 +82,25 @@ function queen(fromX, fromY, toX, toY){
 function king(fromX, fromY, toX, toY, piece){
     if(piece[0] == 'w' && (castling >> 2 > 0)){
         if(Math.abs(fromY - toY) == 2){
-            console.log("ASFHJKDHJKFASDHJIKFBk")
+            let side = fromY - toY
+            side = side > 0 ? 0 : 7;
+            if(isPathClear(fromX, fromY, toX, side)){
+                board[fromX][side] = '';
+                board[fromX][side == 0 ? 3 : 5] = 'wR';
+                castling = castling & 0b0011
+                return true;
+            }
+        }
+    }else if(piece[0] == 'b' && (castling & 3 > 0)){
+        if(Math.abs(fromY - toY) == 2){
+            let side = fromY - toY
+            side = side > 0 ? 0 : 7;
+            if(isPathClear(fromX, fromY, toX, side)){
+                board[fromX][side] = '';
+                board[fromX][side == 0 ? 3 : 5] = 'bR';
+                castling = castling & 0b1100
+                return true;
+            }
         }
     }
     move1 = (fromX == toX || fromY == toY)
@@ -85,8 +114,6 @@ function king(fromX, fromY, toX, toY, piece){
         }
         return true
     }
-
-
     return false
 }
 
