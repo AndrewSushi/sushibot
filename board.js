@@ -54,6 +54,7 @@ function handleClick(piece){
     if(board[x][y] !== '' && selectedSquare == null){
         selectedSquare = [x, y, piece];
         piece.style.backgroundColor = "green"
+        showValidSquares(x, y)
     }else if(selectedSquare && selectedSquare[0] === x && selectedSquare[1] === y){
         selectedSquare = null;
         piece.style.backgroundColor = ''

@@ -4,11 +4,15 @@ let whiteTurn = true
 
 let castling = 15 // Binary representation of 0x1111 rooks 0xwL wR bL bR
 
+let previousMove = []
+
 // Piece Moving
 function movePiece(fromX, fromY, toX, toY){
     if(isValidMove(fromX, fromY, toX, toY)){
         board[toX][toY] = board[fromX][fromY];
         board[fromX][fromY] = ''
+        previousMove[0] = `${fromX}, ${fromY}`
+        previousMove[1] = `${toX}, ${toY}`
         renderBoard()
         renderBoard()
         whiteTurn = !whiteTurn
@@ -49,15 +53,15 @@ function isPathClear(fromX, fromY, toX, toY){
 function rook(fromX, fromY, toX, toY, piece){
     move1 = (fromX == toX || fromY == toY)
     if(move1 & isPathClear(fromX, fromY, toX, toY)){
-        // if(piece[0] == 'w' & fromY == 0){
-        //     castling = castling & 0b0111
-        // }else if(piece[0] == 'w' & fromY == 7){
-        //     castling = castling & 0b1011
-        // }else if(piece[0] == 'b' & fromY == 0){
-        //     castling = castling & 0b1101
-        // }else{
-        //     castling = castling & 0b1110
-        // }
+        if(piece[0] == 'w' & fromY == 0){
+            castling = castling & 0b0111
+        }else if(piece[0] == 'w' & fromY == 7){
+            castling = castling & 0b1011
+        }else if(piece[0] == 'b' & fromY == 0){
+            castling = castling & 0b1101
+        }else if(piece[0] == 'b' & fromY == 7){
+            castling = castling & 0b1110
+        }
         return true
     }
 }
@@ -80,27 +84,33 @@ function queen(fromX, fromY, toX, toY){
 }
 
 function king(fromX, fromY, toX, toY, piece){
-    if(piece[0] == 'w' && (castling >> 2 > 0)){
-        if(Math.abs(fromY - toY) == 2){
-            let side = fromY - toY
-            side = side > 0 ? 0 : 7;
-            if(isPathClear(fromX, fromY, toX, side)){
-                board[fromX][side] = '';
-                board[fromX][side == 0 ? 3 : 5] = 'wR';
-                castling = castling & 0b0011
-                return true;
-            }
+    if(piece[0] == 'w' && Math.abs(fromY - toY) == 2){
+        if(toY == 2 & ((castling & 0b1000) > 0)){
+            side = 0;
+        }else if(toY == 6 & ((castling & 0b0100) > 0)){
+            side = 7
+        }else{
+            return false
         }
-    }else if(piece[0] == 'b' && (castling & 3 > 0)){
-        if(Math.abs(fromY - toY) == 2){
-            let side = fromY - toY
-            side = side > 0 ? 0 : 7;
-            if(isPathClear(fromX, fromY, toX, side)){
-                board[fromX][side] = '';
-                board[fromX][side == 0 ? 3 : 5] = 'bR';
-                castling = castling & 0b1100
-                return true;
-            }
+        if(isPathClear(fromX, fromY, toX, side)){
+            board[fromX][side] = '';
+            board[fromX][side == 0 ? 3 : 5] = 'wR';
+            castling = castling & 0b0011
+            return true;
+        }
+    }else if(piece[0] == 'b' && Math.abs(fromY - toY) == 2){
+        if(toY == 2 & ((castling & 0b0010) > 0)){
+            side = 0;
+        }else if(toY == 6 & ((castling & 0b0001) > 0)){
+            side = 7
+        }else{
+            return false
+        }
+        if(isPathClear(fromX, fromY, toX, side)){
+            board[fromX][side] = '';
+            board[fromX][side == 0 ? 3 : 5] = 'bR';
+            castling = castling & 0b1100
+            return true;
         }
     }
     move1 = (fromX == toX || fromY == toY)
@@ -146,7 +156,6 @@ function pawn(fromX, fromY, toX, toY, piece){
         enPassantSquare = null
     }
 
-    // TODO: Enpassant
     return normalPush || capture || twoPush;
 }
 
@@ -159,15 +168,15 @@ function isValidMove(fromX, fromY, toX, toY){
         return false
     }
     if(fromX == toX & fromY == toY){
-        console.log("Error1")
+        // console.log("Error1")
         return false
     }
     if(piece == board[toX][toY]){
-        console.log("Error2")
+        // console.log("Error2")
         return false
     }
     if(piece[0] === board[toX][toY][0]){
-        console.log("Error3")
+        // console.log("Error3")
         return false
     }
     switch(piece[1]){
@@ -191,4 +200,14 @@ function isValidMove(fromX, fromY, toX, toY){
     }
     // console.log(piece[1])
     return true
+}
+
+function showValidSquares(x, y){
+    for(let i = 0; i < 8; i++){
+        for(let j = 0; j < 8; j++){
+            if(isValidMove(x, y, i, j)){
+                console.log(i, j)
+            }
+        }
+    }
 }
