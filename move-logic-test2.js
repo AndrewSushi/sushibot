@@ -5,10 +5,13 @@ let whiteTurn = true
 let castling = 15 // Binary representation of 0x1111 rooks 0xwL wR bL bR
 
 let previousMove = []
+let potentialList = []
+
 
 // Piece Moving
 function movePiece(fromX, fromY, toX, toY){
     if(isValidMove(fromX, fromY, toX, toY)){
+        potentialList = []
         board[toX][toY] = board[fromX][fromY];
         board[fromX][fromY] = ''
         previousMove[0] = `${fromX}, ${fromY}`
@@ -202,14 +205,29 @@ function isValidMove(fromX, fromY, toX, toY){
     return true
 }
 
-// function showValidSquares(x, y){
-//     // for(let i = 0; i < 8; i++){
-//     //     for(let j = 0; j < 8; j++){
-//     //         if(isValidMove(x, y, i, j)){
-//     //             console.log(i, j)
-//     //         }
-//     //     }
-//     // }
-//     let piece = board[x][y];
+function showValidSquares(x, y){
+    for(let i = 0; i < 8; i++){
+        for(let j = 0; j < 8; j++){
+            if(isValidMove(x, y, i, j)){
+                let dot = document.createElement("div");
+                if(board[i][j] != ''){
+                    dot.classList.add("capture");
+                }else{
+                    dot.classList.add("potential");
+                }
+                boardHTML.rows[i].cells[j].appendChild(dot);
+                potentialList.push([i, j])
+            }
+        }
+    }    
+}
 
-// }
+function removePotential(){
+
+    for(let idx = 0; idx < potentialList.length; idx++){
+        let square = potentialList[idx]
+        let piece = boardHTML.rows[square[0]].cells[square[1]]
+        piece.removeChild(piece.lastChild)
+    }
+    potentialList = []
+}

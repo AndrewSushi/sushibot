@@ -51,17 +51,19 @@ let selectedSquare = null;
 function handleClick(piece){
     let x = piece.parentNode.rowIndex
     let y = piece.cellIndex
+    showValidSquares(x, y)
     if(board[x][y] !== '' && selectedSquare == null){
         selectedSquare = [x, y, piece];
-        piece.style.backgroundColor = "green"
-        showValidSquares(x, y)
+        piece.style.backgroundColor = "rgb(130,151,105)"
     }else if(selectedSquare && selectedSquare[0] === x && selectedSquare[1] === y){
         selectedSquare = null;
-        piece.style.backgroundColor = ''
+        piece.style.backgroundColor = '';
+        removePotential();
     }else if(selectedSquare){
-        movePiece(selectedSquare[0], selectedSquare[1], x, y)
-        selectedSquare[2].style.backgroundColor = ''
-        selectedSquare = null
+        movePiece(selectedSquare[0], selectedSquare[1], x, y);
+        selectedSquare[2].style.backgroundColor = '';
+        selectedSquare = null;
+        removePotential();
     }
 }
 
@@ -72,8 +74,8 @@ function printBoard(){
     }
 }
 
-renderBoard()
-addEventListeners()
+renderBoard();
+addEventListeners();
 // movePiece(6, 4, 4, 4)
 // movePiece(4, 4, 3, 4)
 // // movePiece(4, 0, 3, 0)

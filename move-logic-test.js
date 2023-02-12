@@ -5,10 +5,14 @@ let whiteTurn = true
 let castling = 15 // Binary representation of 0x1111 rooks 0xwL wR bL bR
 
 let previousMove = []
+let potentialList = []
+
+let globals = null
 
 // Piece Moving
 function movePiece(fromX, fromY, toX, toY){
-    if(isValidMove(fromX, fromY, toX, toY)){
+    if(isValidMove(fromX, fromY, toX, toY, 1)){
+        potentialList = []
         board[toX][toY] = board[fromX][fromY];
         board[fromX][fromY] = ''
         previousMove[0] = `${fromX}, ${fromY}`
@@ -16,6 +20,7 @@ function movePiece(fromX, fromY, toX, toY){
         renderBoard()
         renderBoard()
         whiteTurn = !whiteTurn
+        loadGlobals(globals)
     }
 }
 
@@ -50,7 +55,7 @@ function isPathClear(fromX, fromY, toX, toY){
     return true
 }
 
-function rook(fromX, fromY, toX, toY, piece){
+function rook(fromX, fromY, toX, toY, piece, display){
     move1 = (fromX == toX || fromY == toY)
     if(move1 & isPathClear(fromX, fromY, toX, toY)){
         if(piece[0] == 'w' & fromY == 0){
@@ -83,7 +88,7 @@ function queen(fromX, fromY, toX, toY){
     return (move1 || move2) & isPathClear(fromX, fromY, toX, toY)
 }
 
-function king(fromX, fromY, toX, toY, piece){
+function king(fromX, fromY, toX, toY, piece, display){
     if(piece[0] == 'w' && Math.abs(fromY - toY) == 2){
         if(toY == 2 & ((castling & 0b1000) > 0)){
             side = 0;
@@ -127,7 +132,7 @@ function king(fromX, fromY, toX, toY, piece){
     return false
 }
 
-function pawn(fromX, fromY, toX, toY, piece){
+function pawn(fromX, fromY, toX, toY, piece, display){
     if(piece[0] == 'w'){
         if(fromX - toX < 0){
             return false
@@ -148,10 +153,11 @@ function pawn(fromX, fromY, toX, toY, piece){
         }
         return true
     }
-    if(twoPush){
+    if(twoPush & display == 1){
         enPassant = true
         enPassantSquare = [(fromX + toX) / 2, fromY]
-    }else{
+        globals = saveGlobals()
+    }else if(twoPush == 0 & display == 1){
         enPassant = false
         enPassantSquare = null
     }
@@ -160,7 +166,7 @@ function pawn(fromX, fromY, toX, toY, piece){
 }
 
 // Validation checking
-function isValidMove(fromX, fromY, toX, toY){
+function isValidMove(fromX, fromY, toX, toY, display){
     let piece = board[fromX][fromY];
     if((piece[0] == 'b') && (whiteTurn)){
         return false
@@ -182,7 +188,7 @@ function isValidMove(fromX, fromY, toX, toY){
     switch(piece[1]){
         case 'R':
             enPassant = false
-            return rook(fromX, fromY, toX, toY, piece)
+            return rook(fromX, fromY, toX, toY, piece, display)
         case 'N':
             enPassant = false
             return knight(fromX, fromY, toX, toY, piece)
@@ -194,22 +200,65 @@ function isValidMove(fromX, fromY, toX, toY){
             return queen(fromX, fromY, toX, toY, piece)
         case 'K':
             enPassant = false
-            return king(fromX, fromY, toX, toY, piece)
+            return king(fromX, fromY, toX, toY, piece, display)
         case 'P':
-            return pawn(fromX, fromY, toX, toY, piece)
+            return pawn(fromX, fromY, toX, toY, piece, display)
     }
     // console.log(piece[1])
     return true
 }
 
-// function showValidSquares(x, y){
-//     // for(let i = 0; i < 8; i++){
-//     //     for(let j = 0; j < 8; j++){
-//     //         if(isValidMove(x, y, i, j)){
-//     //             console.log(i, j)
-//     //         }
-//     //     }
-//     // }
-//     let piece = board[x][y];
+function saveGlobals(){
+    return [enPassant, enPassantSquare, castling, previousMove]
+}
 
-// }
+function loadGlobals(saved){
+    enPassant = saved[0]
+    enPassantSquare = saved[1]
+    castling = saved[2]
+    previousMove = saved[3]
+}
+
+function showValidSquares(x, y){
+    globals = saveGlobals()
+    // console.log(globals[0], globals[1], globals[2], globals[3])
+    for(let i = 0; i < 8; i++){
+        for(let j = 0; j < 8; j++){
+            if(isValidMove(x, y, i, j, 0)){
+                let dot = document.createElement("div");
+                if(board[i][j] != ''){
+                    dot.classList.add("capture");
+                }else{
+                    dot.classList.add("potential");
+                }
+                boardHTML.rows[i].cells[j].appendChild(dot);
+                potentialList.push([i, j])
+            }
+        }
+    }    
+}
+
+function removePotential(){
+    // for(let i = 0; i < 8; i++){
+    //     for(let j = 0; j < 8; j++){
+    //         let square = boardHTML.rows[i].cells[j];
+    //         let firstChild = square.firstChildElement
+    //         console.log(firstChild)
+    //         if (firstChild != null){
+    //             if(square.classList.contains("potential")){
+    //                 square.removeChild(firstChild)
+    //             }
+    //         //     let child = boardHTML.rows[i].cells[j].firstElementChild
+    //         //     boardHTML.rows[i].cells[j].removeChild(child);
+    //         }
+    //     }
+    // }    
+    for(let idx = 0; idx < potentialList.length; idx++){
+        let square = potentialList[idx]
+        let piece = boardHTML.rows[square[0]].cells[square[1]]
+        piece.removeChild(piece.lastChild)
+        // potentialList[i].remove(boardHTML.rows[potentialList[0]])
+    }
+    potentialList = []
+    loadGlobals(globals)
+}
