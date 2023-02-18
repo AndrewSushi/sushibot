@@ -24,6 +24,9 @@ function movePiece(fromX, fromY, toX, toY){
         if(board[fromX][fromY][1] == 'R'){
             moveRook(fromX, fromY, toX, toY)
         }
+        if(board[fromX][fromY][1] == 'P'){
+            movePawn(fromX, fromY, toX, toY)
+        }
 
         board[toX][toY] = board[fromX][fromY]; // Move the piece to desired location
         board[fromX][fromY] = '' // Make the previous location empty
@@ -54,6 +57,47 @@ function moveRook(fromX, fromY, toX, toY){
         }
         return true
     }
+}
+
+function movePawn(fromX, fromY, toX, toY){
+    piece = board[fromX][fromY]
+    if(piece[0] == 'w'){
+        if(fromX - toX < 0){
+            return false
+        }
+    }else{
+        if(toX - fromX < 0){
+            return false
+        }
+    }
+    let normalPush = (Math.abs(toX - fromX) === 1 && toY === fromY && board[toX][toY] === '');
+    let capture = (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1 && board[toX][toY] !== '');
+    let twoPush = (Math.abs(toX - fromX) === 2 && ((fromX === 6) || (fromX === 1)) && toY === fromY && board[toX][toY] === '');
+    if(enPassant && (toX == enPassantSquare[0]) && (toY == enPassantSquare[1])){
+        if(piece[0] == 'w'){
+            board[toX + 1][toY] = ''
+        }else{
+            board[toX - 1][toY] = ''
+        }
+        return true
+    }
+    if(twoPush){
+        if(fromX === 6){
+            if(board[5][fromY] != ''){
+                twoPush = !twoPush
+            }
+        }else if(fromX === 1){
+            if(board[2][fromY] != ''){
+                twoPush = !twoPush
+            }
+        }
+        enPassant = true
+        enPassantSquare = [(fromX + toX) / 2, fromY]
+    }else{
+        enPassant = false
+        enPassantSquare = null
+    }
+    return normalPush || capture || twoPush;
 }
 
 function moveKing(fromX, fromY, toX, toY){
@@ -193,12 +237,7 @@ function pawn(fromX, fromY, toX, toY, piece){
     let normalPush = (Math.abs(toX - fromX) === 1 && toY === fromY && board[toX][toY] === '');
     let capture = (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1 && board[toX][toY] !== '');
     let twoPush = (Math.abs(toX - fromX) === 2 && ((fromX === 6) || (fromX === 1)) && toY === fromY && board[toX][toY] === '');
-    if(enPassant && (toX == enPassantSquare[0]) && (toY == enPassantSquare[1])){
-        if(piece[0] == 'w'){
-            board[toX + 1][toY] = ''
-        }else{
-            board[toX - 1][toY] = ''
-        }
+    if(enPassant && (toX == enPassantSquare[0]) && (toY == enPassantSquare[1]) && (Math.abs(toX - fromX) === 1 && Math.abs(toY - fromY) === 1)){
         return true
     }
     if(twoPush){
@@ -211,11 +250,6 @@ function pawn(fromX, fromY, toX, toY, piece){
                 twoPush = !twoPush
             }
         }
-        enPassant = true
-        enPassantSquare = [(fromX + toX) / 2, fromY]
-    }else{
-        enPassant = false
-        enPassantSquare = null
     }
     return normalPush || capture || twoPush;
 }
