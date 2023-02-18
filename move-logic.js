@@ -6,6 +6,8 @@ let castling = 15 // Binary representation of 0x1111 rooks 0xwL wR bL bR
 
 let previousMove = [] // Previous move
 let potentialList = []
+let wKPos = [7, 4]
+let bKPos = [0, 4]
 
 // Piece Moving
 function movePiece(fromX, fromY, toX, toY){
@@ -36,6 +38,14 @@ function movePiece(fromX, fromY, toX, toY){
         boardHTML.rows[fromX].cells[fromY].classList.add("previous")
         boardHTML.rows[toX].cells[toY].classList.add("previous")
         
+        if(board[toX][toY][1] == 'K'){
+            if(board[toX][toY][0] == "w"){
+                wKPos = [toX, toY]
+            }else if(board[toX][toY][0] == "b"){
+                bKPos = [toX, toY]
+            }
+        }
+
         renderBoard() // Render the board twice to update the changes
         renderBoard()
         whiteTurn = !whiteTurn // Change turns
@@ -295,7 +305,6 @@ function isValidMove(fromX, fromY, toX, toY){
     }
     return true
 }
-
 
 function showValidSquares(x, y){
     for(let i = 0; i < 8; i++){
