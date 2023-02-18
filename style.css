@@ -38,27 +38,11 @@ img{
     margin: auto;
 }
 
-
-.highlighted {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border: solid 2px rgb(130,151,105);
-    position: relative;
+.capture{
+    background-color: rgb(255, 135, 135) !important;
+    
 }
-  
-.highlighted:before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    transform: rotate(45deg);
-    border-right: solid 10px rgb(130,151,105);
+
+.previous{
+    background-color: rgb(205,210,106);
 }

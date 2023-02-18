@@ -51,10 +51,19 @@ let selectedSquare = null;
 function handleClick(piece){
     let x = piece.parentNode.rowIndex
     let y = piece.cellIndex
-    showValidSquares(x, y)
+    if(whiteTurn && selectedSquare == null){
+        if(board[x][y][0] == 'b'){
+            return;
+        }
+    }else if(!whiteTurn && selectedSquare == null){
+        if(board[x][y][0] == 'w'){
+            return;
+        }
+    }
     if(board[x][y] !== '' && selectedSquare == null){
         selectedSquare = [x, y, piece];
         piece.style.backgroundColor = "rgb(130,151,105)"
+        showValidSquares(x, y)
     }else if(selectedSquare && selectedSquare[0] === x && selectedSquare[1] === y){
         selectedSquare = null;
         piece.style.backgroundColor = '';
