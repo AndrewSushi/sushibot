@@ -14,6 +14,12 @@ function movePiece(fromX, fromY, toX, toY){
     /*
     This is a function to move the piece
     */
+   piece = board[fromX][fromY]
+    if((piece[0] == 'b') && (whiteTurn)){
+        return false
+    }else if((piece[0] == 'w') && (!whiteTurn)){
+        return false
+    }
     if(isValidMove(fromX, fromY, toX, toY)){
         potentialList = []
         if(previousMove.length > 0){
@@ -49,6 +55,11 @@ function movePiece(fromX, fromY, toX, toY){
         renderBoard() // Render the board twice to update the changes
         renderBoard()
         whiteTurn = !whiteTurn // Change turns
+        if(whiteTurn){
+            isCheck(wKPos)
+        }else{
+            isCheck(bKPos)
+        }
     }
 }
 
@@ -267,11 +278,7 @@ function pawn(fromX, fromY, toX, toY, piece){
 // Validation checking
 function isValidMove(fromX, fromY, toX, toY){
     let piece = board[fromX][fromY];
-    if((piece[0] == 'b') && (whiteTurn)){
-        return false
-    }else if((piece[0] == 'w') && (!whiteTurn)){
-        return false
-    }
+
     if(fromX == toX & fromY == toY){
         // console.log("Error1")
         return false

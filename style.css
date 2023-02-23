@@ -46,3 +46,7 @@ img{
 .previous{
     background-color: rgb(205,210,106);
 }
+
+.check{
+    background-color: red;
+}
