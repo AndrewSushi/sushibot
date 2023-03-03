@@ -116,7 +116,7 @@ function movePawn(fromX, fromY, toX, toY){
         enPassantSquare = [(fromX + toX) / 2, fromY]
     }else{
         enPassant = false
-        enPassantSquare = null
+        enPassantSquare = [null, null]
     }
     return normalPush || capture || twoPush;
 }
@@ -294,18 +294,23 @@ function isValidMove(fromX, fromY, toX, toY){
     switch(piece[1]){
         case 'R':
             enPassant = false
+            enPassantSquare = [null, null]
             return rook(fromX, fromY, toX, toY, piece)
         case 'N':
             enPassant = false
+            enPassantSquare = [null, null]
             return knight(fromX, fromY, toX, toY, piece)
         case 'B':
             enPassant = false
+            enPassantSquare = [null, null]
             return bishop(fromX, fromY, toX, toY, piece)
         case 'Q':
             enPassant = false
+            enPassantSquare = [null, null]
             return queen(fromX, fromY, toX, toY, piece)
         case 'K':
             enPassant = false
+            enPassantSquare = [null, null]
             return king(fromX, fromY, toX, toY, piece)
         case 'P':
             return pawn(fromX, fromY, toX, toY, piece)

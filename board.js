@@ -9,6 +9,17 @@ let board = [
     ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
 ];
 
+let rows = {
+    0: 'a',
+    1: 'b',
+    2: 'c',
+    3: 'd',
+    4: 'e',
+    5: 'f',
+    6: 'g',
+    7: 'h'
+}
+
 let boardHTML = document.getElementById("board")
 
 function renderBoard(){
@@ -81,6 +92,66 @@ function printBoard(){
     for(let i = 0; i < 8; i++){
         console.log(board[i]);
     }
+}
+
+function representBoard(){
+    boardString = ''
+    empty = 0;
+    for(let i = 0; i < 8; i++){
+        for(let j = 0; j < 8; j++){
+            if(board[i][j] != ''){
+                if(empty != 0){
+                    boardString += `${empty}`
+                }
+                empty = 0
+                if(board[i][j][0] == 'b'){
+                    boardString += board[i][j][1].toLowerCase()
+                }else{
+                    boardString += board[i][j][1]
+                }
+            }else{
+                empty++
+            }
+        }
+        if(empty != 0){
+            boardString += `${empty}`
+        }
+        empty = 0
+        if(i != 7){
+            boardString += '/'
+        }
+    }
+    if(whiteTurn){
+        boardString += ' w '
+    }else{
+        boardString += ' b '
+    }
+
+    if(castling & 4){
+        boardString += 'K'
+    }
+    if(castling & 8){
+        boardString += 'Q'
+    }
+    if(castling & 1){
+        boardString += 'k'
+    }
+    if(castling & 2){
+        boardString += 'q'
+    }
+    if(castling == 0){
+        boardString += '-'
+    }
+    
+    boardString += ' '
+    
+    if(enPassantSquare){
+        boardString += `${rows[enPassantSquare[0] - 1]}${enPassantSquare[1] - 1}`
+    }else{
+        boardString += '-'
+    }
+    boardString += ' '
+    return boardString
 }
 
 renderBoard();
