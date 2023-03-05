@@ -21,6 +21,10 @@ function movePiece(fromX, fromY, toX, toY){
         return false
     }
     if(isValidMove(fromX, fromY, toX, toY)){
+        if(board[fromX][fromY][1] != 'P'){
+            enPassant = false
+            enPassantSquare = [null, null]
+        }
         potentialList = []
         if(previousMove.length > 0){
             boardHTML.rows[previousMove[0][0]].cells[previousMove[0][1]].classList.remove("previous")
@@ -293,24 +297,14 @@ function isValidMove(fromX, fromY, toX, toY){
     }
     switch(piece[1]){
         case 'R':
-            enPassant = false
-            enPassantSquare = [null, null]
             return rook(fromX, fromY, toX, toY, piece)
         case 'N':
-            enPassant = false
-            enPassantSquare = [null, null]
             return knight(fromX, fromY, toX, toY, piece)
         case 'B':
-            enPassant = false
-            enPassantSquare = [null, null]
             return bishop(fromX, fromY, toX, toY, piece)
         case 'Q':
-            enPassant = false
-            enPassantSquare = [null, null]
             return queen(fromX, fromY, toX, toY, piece)
         case 'K':
-            enPassant = false
-            enPassantSquare = [null, null]
             return king(fromX, fromY, toX, toY, piece)
         case 'P':
             return pawn(fromX, fromY, toX, toY, piece)
