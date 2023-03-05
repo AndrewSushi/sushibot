@@ -123,7 +123,7 @@ function movePawn(fromX, fromY, toX, toY){
 
 function moveKing(fromX, fromY, toX, toY){
     piece = board[fromX][fromY]
-    if(piece[0] == 'w' && Math.abs(fromY - toY) == 2){
+    if(piece[0] == 'w' && Math.abs(fromY - toY) == 2 && fromX == toX){
         if(toY == 2 & ((castling & 0b1000) > 0)){
             side = 0;
         }else if(toY == 6 & ((castling & 0b0100) > 0)){
@@ -137,7 +137,7 @@ function moveKing(fromX, fromY, toX, toY){
             castling = castling & 0b0011
             return true;
         }
-    }else if(piece[0] == 'b' && Math.abs(fromY - toY) == 2){
+    }else if(piece[0] == 'b' && Math.abs(fromY - toY) == 2 && fromX == toX){
         if(toY == 2 & ((castling & 0b0010) > 0)){
             side = 0;
         }else if(toY == 6 & ((castling & 0b0001) > 0)){
@@ -220,7 +220,7 @@ function queen(fromX, fromY, toX, toY){
 }
 
 function king(fromX, fromY, toX, toY, piece){
-    if(piece[0] == 'w' && Math.abs(fromY - toY) == 2){
+    if(piece[0] == 'w' && Math.abs(fromY - toY) == 2 && fromX == toX){
         if(toY == 2 & ((castling & 0b1000) > 0)){
             side = 0;
         }else if(toY == 6 & ((castling & 0b0100) > 0)){
@@ -229,7 +229,7 @@ function king(fromX, fromY, toX, toY, piece){
             return false
         }
         return isPathClear(fromX, fromY, toX, side)
-    }else if(piece[0] == 'b' && Math.abs(fromY - toY) == 2){
+    }else if(piece[0] == 'b' && Math.abs(fromY - toY) == 2 && fromX == toX){
         if(toY == 2 & ((castling & 0b0010) > 0)){
             side = 0;
         }else if(toY == 6 & ((castling & 0b0001) > 0)){
