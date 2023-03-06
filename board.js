@@ -1,3 +1,7 @@
+const moveSound = document.getElementById("move")
+const captureSound = document.getElementById("capture")
+const checkSound = document.getElementById("check")
+
 let board = [
     ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
     ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],

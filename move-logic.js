@@ -14,7 +14,7 @@ function movePiece(fromX, fromY, toX, toY){
     /*
     This is a function to move the piece
     */
-   piece = board[fromX][fromY]
+    piece = board[fromX][fromY]
     if((piece[0] == 'b') && (whiteTurn)){
         return false
     }else if((piece[0] == 'w') && (!whiteTurn)){
@@ -40,6 +40,11 @@ function movePiece(fromX, fromY, toX, toY){
             movePawn(fromX, fromY, toX, toY)
         }
 
+        if(board[toX][toY] != ''){
+            captureSound.play()
+        }else{
+            moveSound.play()
+        }
         board[toX][toY] = board[fromX][fromY]; // Move the piece to desired location
         board[fromX][fromY] = '' // Make the previous location empty
         previousMove[0] = [fromX, fromY] // Setting the previous move array
@@ -104,6 +109,7 @@ function movePawn(fromX, fromY, toX, toY){
         }else{
             board[toX - 1][toY] = ''
         }
+        captureSound.play()
         return true
     }
     if(twoPush){

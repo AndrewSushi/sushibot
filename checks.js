@@ -5,6 +5,7 @@ function isCheck(kingPos){
         for(let j = 0; j < 8; j++){
             if(board[i][j] != ""){
                 if(isValidMove(i, j, kingPos[0], kingPos[1])){
+                    checkSound.play()
                     kingHTML.classList.add("check")
                 }
             }
