@@ -2,12 +2,14 @@ let enPassant = false // If there was a enPassant previous last move
 let enPassantSquare = null // enPassant Square
 let whiteTurn = true // Turn checking
 
-let castling = 15 // Binary representation of 0x1111 rooks 0xwL wR bL bR
+let castling = 15 // Binary representation of 0x1111 looks 0xwL wR bL bR
 
 let previousMove = [] // Previous move
 let potentialList = []
 let wKPos = [7, 4]
 let bKPos = [0, 4]
+
+let validMoves = []
 
 // Piece Moving
 function movePiece(fromX, fromY, toX, toY){
@@ -65,9 +67,19 @@ function movePiece(fromX, fromY, toX, toY){
         renderBoard()
         whiteTurn = !whiteTurn // Change turns
         if(whiteTurn){
-            isCheck(wKPos)
+            if(isCheck(wKPos)){
+                if(doesRemoveCheck(wKPos)){
+                    console.log("HEREHERE")
+                    return
+                }
+            }
         }else{
-            isCheck(bKPos)
+            if(isCheck(bKPos)){
+                if(doesRemoveCheck(bKPos)){
+                    console.log("HEREHERE")
+                    return
+                }
+            }
         }
     }
 }

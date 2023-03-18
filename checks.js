@@ -12,3 +12,7 @@ function isCheck(kingPos){
         }
     }
 }
+
+function doesRemoveCheck(fromX, fromY, toX, toY, kingPos){
+    return true
+}
